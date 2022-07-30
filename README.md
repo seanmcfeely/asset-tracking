@@ -58,6 +58,23 @@ Finally, any configuration file pointed to by the ASSET_TRACKING_CONFIG_PATH env
 
 The configuration loaded from disk will be checked for settings if an environment variable was not explicitly set for any settings.
 
+Configuration example:
+
+```
+[asset_tracking]
+db_host=
+db_port=5432
+db_user=asset_tracker
+db_pass=
+require_all_tools = your_fav_vendor_edr_tool,your_fav_dlp_tool,etc.
+require_one_of_tools = symantec,mcafee,defender,etc.
+max_asset_absence_days = 6
+max_attribute_absence_days = 7
+server_hostname_regex_standard =
+workstation_hostname_regex_standard =
+```
+
+Note, the the server and workstation regex is actually picket up and used by a different detection tool that leverages `asset-tracking` for the time being.
 
 # CLI Tool
 
