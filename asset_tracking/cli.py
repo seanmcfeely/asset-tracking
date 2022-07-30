@@ -42,11 +42,6 @@ def build_parser(parser: argparse.ArgumentParser):
         help="return results in their raw json format",
     )
     parser.add_argument(
-        "--from-stdin",
-        action="store_true",
-        help="Inspect each IP in a list of IP addresses passed to STDIN",
-    )
-    parser.add_argument(
         "-a",
         "--asset-name",
         action="store",
