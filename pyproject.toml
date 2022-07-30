@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "asset-tracking"
-version = "0.1.1"
+version = "0.1.2"
 description = "Enterprise asset tracking by hostname for rouge device detection."
 authors = ["Sean McFeely <mcfeelynaes@gmail.com>"]
 
