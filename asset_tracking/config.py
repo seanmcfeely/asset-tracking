@@ -14,6 +14,7 @@ default_config_path = os.path.join(HOME_PATH, "etc", "defaults.ini")
 user_config_path = os.path.join(os.path.expanduser("~"), ".config", "asset_tracking.ini")
 CONFIG_SEARCH_PATHS = [
     default_config_path,
+    "/etc/ace/asset_tracking.ini",
     user_config_path,
 ]
 
