@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "asset-tracking"
-version = "0.1.2"
+version = "0.1.3"
 description = "Enterprise asset tracking by hostname for rouge device detection."
 authors = ["Sean McFeely <mcfeelynaes@gmail.com>"]
 
@@ -9,7 +9,7 @@ python = "^3.9"
 argcomplete = "^2.0.0"
 coloredlogs = "^15.0.0"
 python-dateutil = "^2.8.0"
-SQLAlchemy = "^1.3.0"
+SQLAlchemy = "^1.4.0"
 pydantic = "^1.8.0"
 SQLAlchemy-Utils = "^0.38.3"
 pg8000 = "^1.29.1"
