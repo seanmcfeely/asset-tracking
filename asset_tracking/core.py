@@ -82,7 +82,7 @@ def evaluate_asset_attributes_and_update_status(session: Session, asset: Asset, 
 
     attributes = get_asset_attributes(session, asset)
     if evaluate_attribute_status:
-        logging.info(f"evaluating attribute statuses for {asset.hostname}")
+        logging.debug(f"evaluating attribute statuses for {asset.hostname}")
         attributes = evaluate_age_of_all_attributes_and_update_status(
             session, attributes, max_attribute_absence=SETTINGS.max_attribute_absence
         )
