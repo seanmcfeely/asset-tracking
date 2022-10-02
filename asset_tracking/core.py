@@ -1,6 +1,7 @@
 import logging
 import datetime
 import json
+from telnetlib import SE
 import dateutil.parser
 
 from typing import List, Union, Dict
@@ -86,29 +87,47 @@ def evaluate_asset_attributes_and_update_status(session: Session, asset: Asset, 
             session, attributes, max_attribute_absence=SETTINGS.max_attribute_absence
         )
 
+    logging.debug(f"evaluating for all {SETTINGS.require_all_attributes} and any of {SETTINGS.require_one_attribute}")
+    if not SETTINGS.require_all_attributes and not SETTINGS.require_one_attribute:
+        logging.warning(f"Zero security tools required; every asset will be considered compliant.")
+        update_asset_status(session, asset, Status.compliant.value)
+        return
+
+    required_tool_count = len(SETTINGS.require_all_attributes)
+    if SETTINGS.require_one_attribute:
+        required_tool_count += 1
+    asset_tool_count = required_tool_count
+
     attribute_names = [a.name.lower() for a in attributes if a.status == AttributeStatus.good]
     has_all_of_these_security_tools = all(tool.lower() in attribute_names for tool in SETTINGS.require_all_attributes)
     has_any_of_these_security_tools = any(tool.lower() in attribute_names for tool in SETTINGS.require_one_attribute)
 
-    if not has_all_of_these_security_tools and not has_any_of_these_security_tools:
-        # devices with NO security tools.
+    compliant = True
+    if SETTINGS.require_all_attributes and not has_all_of_these_security_tools:
+        asset_tool_count -= len(SETTINGS.require_all_attributes)
+        compliant = False
+    if compliant and SETTINGS.require_one_attribute and not has_any_of_these_security_tools:
+        asset_tool_count -= 1
+        compliant = False
+
+    if compliant:
+        logging.debug(
+            f"{asset.hostname} is compliant with {asset_tool_count}/{required_tool_count} required security tools."
+        )
+        update_asset_status(session, asset, Status.compliant.value)
+    else:
+        logging.debug(
+            f"{asset.hostname} is non-compliant with {asset_tool_count}/{required_tool_count} required security tools."
+        )
         if asset.status == Status.rogue:
-            logging.info(f"{asset.hostname} has zero security tools and is classified as a rogue device.")
+            logging.warning(f"{asset.hostname} is classified as a rogue device.")
             # leave the status as rogue, which would mean the asset was discovered as rogue and STILL doesn't have any security tools.
             # This should mean that the device was observed in logs (windows authentication, for instance) indicating a level of risk
             # via unapproved connectivity within the environment.
             return
         if asset.status != Status.non_compliant:
+            logging.info(f"marking {asset.hostname} as non-compliant.")
             update_asset_status(session, asset, Status.non_compliant.value)
-        logging.info(f"{asset.hostname} has zero security tools.")
-
-    elif has_all_of_these_security_tools and has_any_of_these_security_tools:
-        # compliant
-        update_asset_status(session, asset, Status.compliant.value)
-
-    else:
-        # Device with some security tools.
-        update_asset_status(session, asset, Status.non_compliant.value)
 
     return
 

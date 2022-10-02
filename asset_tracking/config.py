@@ -114,29 +114,27 @@ class Settings(BaseSettings):
     @property
     def require_all_attributes(self) -> List:
         required_attributes: List[str] = []
+        required_attributes_str = None
         if "ASSET_TRACKING_REQUIRE_ALL_ATTRIBUTES" in os.environ:
             required_attributes_str = os.environ.get("ASSET_TRACKING_REQUIRE_ALL_ATTRIBUTES")
-            if isinstance(required_attributes_str, str) and "," in required_attributes_str:
-                required_attributes = required_attributes_str.split(",")
-            else:
-                logging.warning(
-                    f"ASSET_TRACKING_REQUIRE_ALL_ATTRIBUTES is not a comma separated list: {required_attributes_str}"
-                )
-                return []
+        elif CONFIG.has_option("asset_tracking", "require_all_tools"):
+            required_attributes_str = CONFIG.get("asset_tracking", "require_all_tools")
+        if required_attributes_str and isinstance(required_attributes_str, str):
+            required_attributes = required_attributes_str.split(",")
+
         return required_attributes
 
     @property
     def require_one_attribute(self) -> List:
         required_attributes: List[str] = []
+        required_attributes_str = None
         if "ASSET_TRACKING_REQUIRE_ONE_ATTRIBUTE" in os.environ:
             required_attributes_str = os.environ.get("ASSET_TRACKING_REQUIRE_ONE_ATTRIBUTE")
-            if isinstance(required_attributes_str, str) and "," in required_attributes_str:
-                required_attributes = required_attributes_str.split(",")
-            else:
-                logging.warning(
-                    f"ASSET_TRACKING_REQUIRE_ONE_ATTRIBUTE is not a comma separated list: {required_attributes_str}"
-                )
-                return []
+        elif CONFIG.has_option("asset_tracking", "require_one_of_tools"):
+            required_attributes_str = CONFIG.get("asset_tracking", "require_one_of_tools")
+        if required_attributes_str and isinstance(required_attributes_str, str):
+            required_attributes = required_attributes_str.split(",")
+
         return required_attributes
 
     class Config:

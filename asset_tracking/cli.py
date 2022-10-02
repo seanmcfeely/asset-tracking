@@ -34,6 +34,7 @@ def build_parser(parser: argparse.ArgumentParser):
 
     parser.add_argument("-l", "--list-assets", action="store_true", help="List ALL(!) assets.")
     parser.add_argument("--delete-asset", action="store", default=None, help="Delete an asset by name.")
+    parser.add_argument("--debug", action="store_true", default=False, help="Set logging to debug.")
     parser.add_argument(
         "-r",
         "--json",
@@ -357,5 +358,8 @@ def main(args=None):
     build_parser(parser)
     argcomplete.autocomplete(parser)
     args = parser.parse_args(args)
+
+    if args.debug:
+        coloredlogs.install(level="DEBUG", logger=logging.getLogger())
 
     return execute_arguments(args)
