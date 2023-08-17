@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "asset-tracking"
-version = "0.1.4"
+version = "0.1.5"
 description = "Enterprise asset tracking by hostname for rouge device detection."
 authors = ["Sean McFeely <mcfeelynaes@gmail.com>"]
 
@@ -32,3 +32,4 @@ line-length = 120
 
 [tool.poetry.scripts]
 asset-tracker = "asset_tracking.cli:main"
+
