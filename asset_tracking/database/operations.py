@@ -31,6 +31,8 @@ Session: ORMSession = sessionmaker(autocommit=False, autoflush=True, bind=engine
 @contextlib.contextmanager
 def get_db_session():
     """Get a database session."""
+    if SETTINGS.multiprocessing_connection_pools:
+        engine.dispose(close=False)
     db = Session()
     try:
         yield db

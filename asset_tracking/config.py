@@ -112,6 +112,12 @@ class Settings(BaseSettings):
         )
 
     @property
+    def multiprocessing_connection_pools(self) -> bool:
+        if CONFIG.get("asset_tracking", "multiprocessing_connection_pools", fallback=False):
+            return CONFIG.getboolean("asset_tracking", "multiprocessing_connection_pools")
+        return False
+        
+    @property
     def require_all_attributes(self) -> List:
         required_attributes: List[str] = []
         required_attributes_str = None
